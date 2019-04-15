@@ -1,0 +1,23 @@
+{
+  "name": "website-root-assets",
+  "version": "1.0.0",
+  "description": "Website root assets for Emory Libraries' sites",
+  "main": "Gruntfile.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emory-libraries/website-root-assets.git"
+  },
+  "author": "Lauren Hamel",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/emory-libraries/website-root-assets/issues"
+  },
+  "homepage": "https://github.com/emory-libraries/website-root-assets#readme",
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "grunt-plop": "^1.1.1",
+    "handlebars-helpers": "^0.10.0",
+    "plop": "^2.3.0"
+  }
+}

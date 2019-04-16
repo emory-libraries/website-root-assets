@@ -1,5 +1,8 @@
 module.exports = (grunt) => {
   
+  // Load dependencies.
+  const path = require('path');
+  
   // Configure tasks.
   grunt.initConfig({});
   
@@ -8,5 +11,6 @@ module.exports = (grunt) => {
   
   // Register tasks.
   grunt.registerTask('default', ['plop']);
+  grunt.registerTask('deploy', require(path.resolve('scripts/deploy.js')));
   
 };

@@ -2,8 +2,8 @@
 
 // Set site globals.
 define('DOMAIN', 'dev.libraries.emory.edu');
-define('ENVIRONMENT', 'dev');
-define('SITE', 'libraries.emory.edu'));
+define('ENVIRONMENT', 'development');
+define('SITE', 'libraries.emory.edu');
 
 // Set path globals.
 define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT']);

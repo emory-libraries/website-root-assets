@@ -2,8 +2,8 @@
 
 // Set site globals.
 define('DOMAIN', '{{#unless (eq environment "production")}}{{environment}}.{{/unless}}{{site}}');
-define('ENVIRONMENT', '{{environment}}');
-define('SITE', '{{site}}'));
+define('ENVIRONMENT', '{{#if (eq environment "dev")}}development{{else}}{{environment}}{{/if}}');
+define('SITE', '{{site}}');
 
 // Set path globals.
 define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT']);

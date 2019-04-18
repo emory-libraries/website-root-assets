@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = async function () {
   
   // Load dependencies.
   const inquirer = require('inquirer');
@@ -29,7 +29,7 @@ module.exports = function () {
   });
   
   // Initialize prompts.
-  inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       name: 'site',
       type: 'list',
@@ -71,13 +71,13 @@ module.exports = function () {
       message: (answers) => chalk`You are about to deploy files to {cyan ${answers.site}}.\n  {bold Do you wish to continue?}`,
       default: false
     }
-  ]).then((answers) => {
+  ]);
     
-    // Verify that the user wishes to continue.
-    if( answers.continue ) {
+  // Verify that the user wishes to continue.
+  if( answers.continue ) {
       
-      // Capture promises.
-      const promises = [];
+    // Try to deploy files to the remote server.
+    try {
       
       // Get the contents of the local site's directory.
       const files = glob(path.resolve(answers.site, '*'), {dot: true}).map((file) => {
@@ -99,37 +99,38 @@ module.exports = function () {
       });
       
       // Write the files to the remove server.
-      files.forEach((file) => {
+      for( let file of files ) {
         
         // Get the file's remote path.
         const remote = path.join(answers.site, file.path);
         
-        // Push for the remote contents.
-        promises.push(client.putFileContents(remote, file.contents));
+        // Push the file to the remote server.
+        await client.putFileContents(remote, file.contents);
         
-      });
-      
-      // Wait for all files to finish uploading.
-      Promise.all(promises).then(() => {
+      }
         
-        // Report success.
-        console.log(chalk`\nFiles were successfully deployed to {green.bold ${answers.site}}.\n`);
+      // Report success.
+      console.log(chalk`\nFiles were successfully deployed to {green.bold ${answers.site}}.\n`);
         
-        // Done.
-        done();
+      // Done.
+      done();
         
-      }).catch((error) => {
-        
-        // Report errors.
-        console.error(chalk`\nAn error occurred while trying to deploy files to {red.bold ${answers.site}}:\n\n${error}\n`);
-        
-      });
-      
     }
+      
+    // Otherwise, report errors.
+    catch(error) {
+        
+      // Report errors.
+      console.error(chalk`\nAn error occurred while trying to deploy files to {red.bold ${answers.site}}:\n\n${error}\n`);
+      
+      // Done.
+      done();
+        
+    }
+      
+  }
     
-    // Otherwise, done.
-    else done();
-    
-  });
+  // Otherwise, done.
+  else done();
   
 };

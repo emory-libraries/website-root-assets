@@ -5,7 +5,7 @@ module.exports = (plop) => {
   
   // Configure environments.
   const env = [
-    'dev',
+    'development',
     'qa',
     'staging',
     'production'
@@ -35,23 +35,42 @@ module.exports = (plop) => {
       // Initialize actions.
       const actions = [];
       
-      // Determine the folder name.
-      const folder = data.environment == 'production' ? data.site : `${data.environment}.${data.site}`;
+      // Initialize the subdomain.
+      let subdomain = data.environment;
+      
+      // Configure the subdomain based on the environment.
+      switch(data.environment) {
+        case "development": subdomain = 'dev'; break;
+        case "production": subdomain = ''; break;
+      }
+      
+      // Get the domain and folder name.
+      const domain = (subdomain !== '' ? `${subdomain}.` : '') + data.site;
 
       // 1. Create the new index file.
       actions.push({
         type: 'add',
-        path: `${folder}/index.php`,
+        path: `${domain}/index.php`,
         templateFile: `templates/index.php`,
-        data
+        data: {
+          site: data.site,
+          environment: data.environment,
+          subdomain,
+          domain
+        }
       });
       
        // 2. Create the new htaccess file.
       actions.push({
         type: 'add',
-        path: `${folder}/.htaccess`,
+        path: `${domain}/.htaccess`,
         templateFile: `templates/.htaccess`,
-        data
+        data: {
+          site: data.site,
+          environment: data.environment,
+          subdomain,
+          domain
+        }
       });
 
       // Generate.
@@ -67,7 +86,7 @@ module.exports = (plop) => {
       {
         type: 'input',
         name: 'site',
-        message: "What is the site's domain? Do not include environment-specific subdomains.",
+        message: "What is the site's domain? Do not include environment-specific subdomains."
       }
     ],
     actions(data) {
@@ -78,26 +97,42 @@ module.exports = (plop) => {
       // Build folder structure for all environments.
       env.forEach((environment) => {
         
-        // Save the environment.
-        data.environment = environment;
+        // Initialize the subdomain.
+      let subdomain = environment;
       
-        // Determine the folder name.
-        const folder = data.environment == 'production' ? data.site : `${data.environment}.${data.site}`;
+      // Configure the subdomain based on the environment.
+      switch(environment) {
+        case "development": subdomain = 'dev'; break;
+        case "production": subdomain = ''; break;
+      }
+      
+      // Get the domain and folder name.
+      const domain = (subdomain !== '' ? `${subdomain}.` : '') + data.site;
 
         // 1. Create the new index file.
         actions.push({
           type: 'add',
-          path: `${folder}/index.php`,
+          path: `${domain}/index.php`,
           templateFile: `templates/index.php`,
-          data
+          data: {
+            site: data.site,
+            environment,
+            subdomain,
+            domain
+          }
         });
 
          // 2. Create the new htaccess file.
         actions.push({
           type: 'add',
-          path: `${folder}/.htaccess`,
+          path: `${domain}/.htaccess`,
           templateFile: `templates/.htaccess`,
-          data
+          data: {
+            site: data.site,
+            environment,
+            subdomain,
+            domain
+          }
         });
       
       });

@@ -22,12 +22,30 @@ module.exports = (plop) => {
         type: 'list',
         name: 'environment',
         message: "What is the site environment?",
-        choices: env
+        choices: env,
+        validate(input) {
+          
+          // Require a value.
+          if( input !== null && input !== undefined && input !== '' ) return true;
+          
+          // Otherwise, return an error message.
+          return 'Environment is required.'
+          
+        }
       },
       {
         type: 'input',
         name: 'site',
         message: "What is the site's domain? Do not include environment-specific subdomains.",
+        validate(input) {
+          
+          // Require a value.
+          if( input !== null && input !== undefined && input !== '' ) return true;
+          
+          // Otherwise, return an error message.
+          return 'Site is required.'
+          
+        }
       }
     ],
     actions(data) {
@@ -47,7 +65,7 @@ module.exports = (plop) => {
       // Get the domain and folder name.
       const domain = (subdomain !== '' ? `${subdomain}.` : '') + data.site;
 
-      // 1. Create the new index file.
+      // 1. Create the site's index file.
       actions.push({
         type: 'add',
         path: `${domain}/index.php`,
@@ -60,7 +78,20 @@ module.exports = (plop) => {
         }
       });
       
-       // 2. Create the new htaccess file.
+      // 2. Create the site's indexer file.
+      actions.push({
+        type: 'add',
+        path: `${domain}/indexer.php`,
+        templateFile: `templates/indexer.php`,
+        data: {
+          site: data.site,
+          environment: data.environment,
+          subdomain,
+          domain
+        }
+      });
+      
+       // 3. Create the site's htaccess file.
       actions.push({
         type: 'add',
         path: `${domain}/.htaccess`,
@@ -86,7 +117,16 @@ module.exports = (plop) => {
       {
         type: 'input',
         name: 'site',
-        message: "What is the site's domain? Do not include environment-specific subdomains."
+        message: "What is the site's domain? Do not include environment-specific subdomains.",
+        validate(input) {
+          
+          // Require a value.
+          if( input !== null && input !== undefined && input !== '' ) return true;
+          
+          // Otherwise, return an error message.
+          return 'Site is required.'
+          
+        }
       }
     ],
     actions(data) {
@@ -109,7 +149,7 @@ module.exports = (plop) => {
       // Get the domain and folder name.
       const domain = (subdomain !== '' ? `${subdomain}.` : '') + data.site;
 
-        // 1. Create the new index file.
+        // 1. Create the site's index file.
         actions.push({
           type: 'add',
           path: `${domain}/index.php`,
@@ -121,8 +161,21 @@ module.exports = (plop) => {
             domain
           }
         });
+        
+        // 2. Create the site's indexer file.
+        actions.push({
+          type: 'add',
+          path: `${domain}/indexer.php`,
+          templateFile: `templates/indexer.php`,
+          data: {
+            site: data.site,
+            environment,
+            subdomain,
+            domain
+          }
+        });
 
-         // 2. Create the new htaccess file.
+         // 3. Create the site's htaccess file.
         actions.push({
           type: 'add',
           path: `${domain}/.htaccess`,

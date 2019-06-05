@@ -24,6 +24,22 @@ define('ENGINE_ROOT', SERVER_ROOT.'/engine/'.$environment[ENVIRONMENT]);
 define('CACHE_ROOT', SERVER_ROOT.'/engine/'.$environment[ENVIRONMENT].'/php/cache');
 define('SITE_DATA', DATA_ROOT.'/'.SITE);
 
+// Set cross domain globals.
+define('ORIGIN', (isset($_SERVER['HTTP_ORIGIN']) ? preg_replace('/^https?\:\/\/', '', $_SERVER['HTTP_ORIGIN']) : $_SERVER['HTTP_HOST']));
+define('PERMITTED_ORIGINS', [
+  'qa.libraries.emory.edu',
+  'cascade.emory.edu',
+  'template.library.emory.edu',
+  'localhost'
+]);
+define('CROSSDOMAIN', in_array(ORIGIN, PERMITTED_ORIGINS));
+
+// Enables CORS for triggering the indexer
+if( CROSSDOMAIN ) header('Access-Control-Allow-Origin: '.(isset($_SERVER['HTTPS']) ? 'https://' : 'http://').ORIGIN);
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Request-Method: POST");
+header('Access-Control-Allow-Headers: authorization, cache-control, origin, content-type, accept-encoding, accept-language');
+
 // Load the indexer.
 require ENGINE_ROOT."/php/index.php"; 
 

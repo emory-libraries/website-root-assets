@@ -1,9 +1,21 @@
 <?php
 
 // Set site globals.
-define('DOMAIN', 'staging.libraries.emory.edu');
 define('ENVIRONMENT', 'staging');
 define('SITE', 'libraries.emory.edu');
+
+// Configure site subdomains.
+$subdomains = [
+  'development' => 'dev',
+  'qa' => 'qa',
+  'staging' => 'staging',
+  'production' => ''
+];
+
+// Build additional site globals.
+define('PREVIEW', explode('.', $_SERVER['HTTP_HOST'])[0] === 'preview');
+define('SUBDOMAIN', PREVIEW ? 'preview' : $subdomains[ENVIRONMENT]);
+define('DOMAIN', SUBDOMAIN === '' ? SITE : SUBDOMAIN.'.'.SITE);
 
 // Configure environment directories for data, patterns, engine, and cache.
 $environment = [

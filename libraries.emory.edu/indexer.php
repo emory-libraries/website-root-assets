@@ -1,7 +1,6 @@
 <?php
 
 // Set site globals.
-//define('DOMAIN', 'libraries.emory.edu');
 define('ENVIRONMENT', 'production');
 define('SITE', 'libraries.emory.edu');
 
